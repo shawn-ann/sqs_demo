@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+group 'liteweb'
+version '1.0'
+
+repositories {
+
+    maven {
+        url "https://jcenter.bintray.com"
+    }
+
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version:"2.20.0"
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version:"2.20.0"
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version:"2.20.0"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.6.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    implementation(group: 'com.amazonaws', name: 'aws-java-sdk', version: "1.12.470"){
+    }
+    implementation(group: 'com.amazonaws', name: 'aws-java-sdk-core', version: "1.12.470"){
+    }
+    implementation(group: 'com.amazonaws', name: 'amazon-sqs-java-messaging-lib', version: "1.0.8") {
+    }
+    implementation(group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version: "1.12.470") {
+    }
+    implementation(group: 'org.springframework', name: 'spring-jms', version: "5.3.27")
+    implementation group: 'javax.jms', name: 'javax.jms-api', version: "2.0.1"
+    implementation 'org.springframework:spring-context:5.3.27'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'liteweb.Server'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = 'exclude'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion '0.8.0'
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
