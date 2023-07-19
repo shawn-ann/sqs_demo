@@ -1,9 +1,15 @@
 # Spring JMS Demo - Send Message and Receive Message in Fifo Queue
 
 1. Update the SQS endpoint and queue name in SQSConfig.java
-2. Run [SpringJMSSendMessage.java](src%2Fmain%2Fjava%2Fsqs%2FSpringJMSSendMessage.java) to send message with same group id
-3. Run [SpringJMSReceiveMessage.java](src%2Fmain%2Fjava%2Fsqs%2FSpringJMSReceiveMessage.java) to receive message
-4. Verify the log of receive
+2. Create a new queuq
+```bash
+aws sqs create-queue --queue-name example.fifo --attributes '{"VisibilityTimeout":"60","FifoQueue":"true","ContentBasedDeduplication":"true","DeduplicationScope":"messageGroup","FifoThroughputLimit":"perMessageGroupId"}'
+Or
+awslocal sqs create-queue --queue-name example.fifo --attributes '{"VisibilityTimeout":"60","FifoQueue":"true","ContentBasedDeduplication":"true","DeduplicationScope":"messageGroup","FifoThroughputLimit":"perMessageGroupId"}'
+```
+3. Run [SpringJMSSendMessage.java](src%2Fmain%2Fjava%2Fsqs%2FSpringJMSSendMessage.java) to send message with same group id
+4. Run [SpringJMSReceiveMessage.java](src%2Fmain%2Fjava%2Fsqs%2FSpringJMSReceiveMessage.java) to receive message
+5. Verify the log of receive
 
 Connect to AWS SQS
  - The second message will not be processed if the first message has not been processed.
